@@ -15,7 +15,7 @@
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar-modern.collapsed ~ * .navbar,
+.sidebar-modern.collapsed~* .navbar,
 body:has(.sidebar-modern.collapsed) .navbar {
     margin-left: 75px;
 }
@@ -226,6 +226,10 @@ body:has(.sidebar-modern.collapsed) .navbar {
     padding: var(--spacing-5) 0;
     overflow-y: auto;
     overflow-x: hidden;
+    /* Ensure smooth scrolling */
+    scroll-behavior: smooth;
+    /* Add proper height constraint */
+    max-height: calc(100vh - 240px);
 }
 
 .nav-section {
@@ -497,7 +501,7 @@ body:has(.sidebar-modern.collapsed) .navbar {
     min-height: 100vh;
 }
 
-.sidebar-modern.collapsed ~ .dashboard-main,
+.sidebar-modern.collapsed~.dashboard-main,
 body:has(.sidebar-modern.collapsed) .dashboard-main {
     margin-left: 75px;
 }
@@ -601,7 +605,7 @@ body:has(.sidebar-modern.collapsed) .dashboard-main {
         padding: var(--spacing-4);
     }
 
-    .sidebar-modern.collapsed ~ .dashboard-main,
+    .sidebar-modern.collapsed~.dashboard-main,
     body:has(.sidebar-modern.collapsed) .dashboard-main {
         margin-left: 0;
     }
@@ -616,6 +620,7 @@ body:has(.sidebar-modern.collapsed) .dashboard-main {
         display: none;
     }
 }
+
 /* Notifications Styles */
 .nav-notifications {
     position: relative;
@@ -670,7 +675,7 @@ body:has(.sidebar-modern.collapsed) .dashboard-main {
     width: 320px;
     background: white;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--border-color);
     overflow: hidden;
     animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -678,8 +683,15 @@ body:has(.sidebar-modern.collapsed) .dashboard-main {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .notification-header {
@@ -759,4 +771,44 @@ body:has(.sidebar-modern.collapsed) .dashboard-main {
     color: var(--text-muted);
     font-size: 1rem;
     margin-top: 4px;
+}
+
+
+/* ===================================
+   APP CONTAINER FIX
+   =================================== */
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Ensure proper scrolling */
+.dashboard-main {
+    padding-top: 80px;
+    /* Account for navbar */
+}
+
+/* Fix for pages using Layout component */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-modern.collapsed~.main-content {
+    margin-left: 75px;
+}
+
+/* Ensure content doesn't go under sidebar */
+@media (min-width: 769px) {
+    body {
+        padding-left: 0;
+    }
 }

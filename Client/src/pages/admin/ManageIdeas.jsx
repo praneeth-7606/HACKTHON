@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import Layout from '../../components/layout/Layout';
 import ideaAPI from '../../services/ideaAPI';
 import { 
     FiThumbsUp, FiEye, FiFilter, FiSearch, FiMessageSquare,
-    FiCheckCircle, FiXCircle, FiClock
+    FiCheckCircle, FiXCircle, FiClock, FiX, FiSend, FiCalendar,
+    FiTrendingUp, FiZap, FiAlertCircle, FiAward
 } from 'react-icons/fi';
+import toast from 'react-hot-toast';
 import './ManageIdeas.css';
 
 const ManageIdeas = () => {
@@ -37,6 +40,7 @@ const ManageIdeas = () => {
             setIdeas(response.data.ideas);
         } catch (error) {
             console.error('Error fetching ideas:', error);
+            toast.error('Failed to load ideas');
         } finally {
             setLoading(false);
         }
@@ -48,27 +52,19 @@ const ManageIdeas = () => {
             const response = await ideaAPI.addGovernmentResponse(selectedIdea._id, responseData);
             
             if (response.success) {
-                // Success - close modal and refresh
                 setShowResponseModal(false);
                 setResponseData({ status: '', message: '', newStatus: '', estimatedImplementationDate: '' });
                 await fetchIdeas();
-                
-                // Show success message
-                const successDiv = document.createElement('div');
-                successDiv.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:1rem 1.5rem;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:10000;animation:slideIn 0.3s ease;';
-                successDiv.innerHTML = '✓ Response added successfully!';
-                document.body.appendChild(successDiv);
-                setTimeout(() => successDiv.remove(), 3000);
+                toast.success('✓ Response added successfully!', {
+                    style: {
+                        background: '#10b981',
+                        color: '#fff',
+                    }
+                });
             }
         } catch (error) {
             console.error('Error adding response:', error);
-            
-            // Show error message
-            const errorDiv = document.createElement('div');
-            errorDiv.style.cssText = 'position:fixed;top:20px;right:20px;background:#ef4444;color:white;padding:1rem 1.5rem;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:10000;';
-            errorDiv.innerHTML = '✗ ' + (error.response?.data?.message || 'Failed to add response');
-            document.body.appendChild(errorDiv);
-            setTimeout(() => errorDiv.remove(), 3000);
+            toast.error(error.response?.data?.message || 'Failed to add response');
         }
     };
 
@@ -92,23 +88,108 @@ const ManageIdeas = () => {
         return colors[status] || 'status-default';
     };
 
+    const getStatusIcon = (status) => {
+        const icons = {
+            'Submitted': FiClock,
+            'Under Review': FiAlertCircle,
+            'Shortlisted': FiAward,
+            'Approved': FiCheckCircle,
+            'Implemented': FiZap,
+            'Rejected': FiXCircle
+        };
+        return icons[status] || FiClock;
+    };
+
     return (
         <Layout>
-            <div className="manage-ideas-page">
-                <div className="page-header">
-                    <div>
-                        <h1>Manage Ideas</h1>
-                        <p>Review and respond to citizen ideas</p>
+            <div className="manage-ideas-modern">
+                {/* Hero Header */}
+                <motion.div 
+                    className="ideas-hero"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                >
+                    <div className="hero-glow"></div>
+                    <div className="hero-content">
+                        <div className="hero-icon">💡</div>
+                        <h1 className="hero-title">
+                            Manage <span className="gradient-text">Citizen Ideas</span>
+                        </h1>
+                        <p className="hero-subtitle">
+                            Review, respond, and transform innovative ideas into reality
+                        </p>
                     </div>
-                </div>
+                </motion.div>
 
-                {/* Filters */}
-                <div className="filters-section">
-                    <div className="filter-group">
-                        <FiFilter />
+                {/* Stats Cards */}
+                <motion.div 
+                    className="stats-grid"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <div className="stat-card-modern">
+                        <div className="stat-icon submitted">
+                            <FiClock />
+                        </div>
+                        <div className="stat-info">
+                            <div className="stat-value">{ideas.filter(i => i.status === 'Submitted').length}</div>
+                            <div className="stat-label">Submitted</div>
+                        </div>
+                    </div>
+                    <div className="stat-card-modern">
+                        <div className="stat-icon review">
+                            <FiAlertCircle />
+                        </div>
+                        <div className="stat-info">
+                            <div className="stat-value">{ideas.filter(i => i.status === 'Under Review').length}</div>
+                            <div className="stat-label">Under Review</div>
+                        </div>
+                    </div>
+                    <div className="stat-card-modern">
+                        <div className="stat-icon approved">
+                            <FiCheckCircle />
+                        </div>
+                        <div className="stat-info">
+                            <div className="stat-value">{ideas.filter(i => i.status === 'Approved').length}</div>
+                            <div className="stat-label">Approved</div>
+                        </div>
+                    </div>
+                    <div className="stat-card-modern">
+                        <div className="stat-icon implemented">
+                            <FiZap />
+                        </div>
+                        <div className="stat-info">
+                            <div className="stat-value">{ideas.filter(i => i.status === 'Implemented').length}</div>
+                            <div className="stat-label">Implemented</div>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Filters Section */}
+                <motion.div 
+                    className="filters-modern"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    <div className="filter-group-modern">
+                        <FiSearch className="filter-icon" />
+                        <input
+                            type="text"
+                            placeholder="Search ideas..."
+                            value={filters.search}
+                            onChange={(e) => setFilters({...filters, search: e.target.value})}
+                            className="search-input-modern"
+                        />
+                    </div>
+
+                    <div className="filter-group-modern">
+                        <FiFilter className="filter-icon" />
                         <select 
                             value={filters.category}
                             onChange={(e) => setFilters({...filters, category: e.target.value})}
+                            className="select-modern"
                         >
                             {categories.map(cat => (
                                 <option key={cat} value={cat}>{cat}</option>
@@ -116,10 +197,11 @@ const ManageIdeas = () => {
                         </select>
                     </div>
 
-                    <div className="filter-group">
+                    <div className="filter-group-modern">
                         <select 
                             value={filters.status}
                             onChange={(e) => setFilters({...filters, status: e.target.value})}
+                            className="select-modern"
                         >
                             {statuses.map(status => (
                                 <option key={status} value={status}>{status}</option>
@@ -127,179 +209,227 @@ const ManageIdeas = () => {
                         </select>
                     </div>
 
-                    <div className="filter-group">
+                    <div className="filter-group-modern">
+                        <FiTrendingUp className="filter-icon" />
                         <select 
                             value={filters.sortBy}
                             onChange={(e) => setFilters({...filters, sortBy: e.target.value})}
+                            className="select-modern"
                         >
                             <option value="createdAt">Latest</option>
                             <option value="popular">Most Popular</option>
                             <option value="upvoteCount">Most Upvoted</option>
                         </select>
                     </div>
+                </motion.div>
 
-                    <div className="search-group">
-                        <FiSearch />
-                        <input
-                            type="text"
-                            placeholder="Search ideas..."
-                            value={filters.search}
-                            onChange={(e) => setFilters({...filters, search: e.target.value})}
-                        />
-                    </div>
-                </div>
-
-                {/* Ideas Table */}
+                {/* Ideas Grid */}
                 {loading ? (
-                    <div className="loading-state">
-                        <div className="spinner"></div>
+                    <div className="loading-state-modern">
+                        <div className="spinner-modern"></div>
                         <p>Loading ideas...</p>
                     </div>
                 ) : ideas.length === 0 ? (
-                    <div className="empty-state">
+                    <motion.div 
+                        className="empty-state-modern"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                    >
+                        <div className="empty-icon">💡</div>
                         <h3>No ideas found</h3>
                         <p>No citizen ideas match your filters</p>
-                    </div>
+                    </motion.div>
                 ) : (
-                    <div className="ideas-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Category</th>
-                                    <th>Submitter</th>
-                                    <th>Status</th>
-                                    <th>Engagement</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {ideas.map(idea => (
-                                    <tr key={idea._id}>
-                                        <td>
-                                            <Link to={`/dashboard/ideas/${idea._id}`} className="idea-link">
-                                                {idea.title}
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            <span className="category-badge">{idea.category}</span>
-                                        </td>
-                                        <td>{idea.submittedBy?.name}</td>
-                                        <td>
-                                            <span className={`status-badge ${getStatusColor(idea.status)}`}>
-                                                {idea.status}
+                    <div className="ideas-grid-modern">
+                        {ideas.map((idea, index) => {
+                            const StatusIcon = getStatusIcon(idea.status);
+                            
+                            return (
+                                <motion.div
+                                    key={idea._id}
+                                    className="idea-card-modern"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    whileHover={{ y: -5 }}
+                                >
+                                    <div className="card-header-modern">
+                                        <div className="card-badges">
+                                            <span className="category-badge-modern">{idea.category}</span>
+                                            <span className={`status-badge-modern ${getStatusColor(idea.status)}`}>
+                                                <StatusIcon /> {idea.status}
                                             </span>
-                                        </td>
-                                        <td>
-                                            <div className="engagement-stats">
-                                                <span><FiThumbsUp /> {idea.upvoteCount}</span>
-                                                <span><FiEye /> {idea.viewCount}</span>
+                                        </div>
+                                    </div>
+
+                                    <Link to={`/dashboard/ideas/${idea._id}`} className="card-title-modern">
+                                        {idea.title}
+                                    </Link>
+
+                                    <p className="card-description-modern">
+                                        {idea.description.substring(0, 120)}...
+                                    </p>
+
+                                    <div className="card-meta-modern">
+                                        <div className="submitter-info-modern">
+                                            <div className="avatar-modern">
+                                                {idea.submittedBy?.name?.charAt(0) || 'U'}
                                             </div>
-                                        </td>
-                                        <td>{new Date(idea.createdAt).toLocaleDateString()}</td>
-                                        <td>
-                                            <div className="action-buttons">
-                                                <Link 
-                                                    to={`/dashboard/ideas/${idea._id}`}
-                                                    className="action-btn view-btn"
-                                                    title="View Details"
-                                                >
-                                                    View
-                                                </Link>
-                                                <button
-                                                    className="action-btn respond-btn"
-                                                    onClick={() => {
-                                                        setSelectedIdea(idea);
-                                                        setShowResponseModal(true);
-                                                    }}
-                                                    title="Add Response"
-                                                >
-                                                    <FiMessageSquare />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                            <span>{idea.submittedBy?.name}</span>
+                                        </div>
+                                        <div className="date-modern">
+                                            <FiClock />
+                                            {new Date(idea.createdAt).toLocaleDateString()}
+                                        </div>
+                                    </div>
+
+                                    <div className="card-stats-modern">
+                                        <div className="stat-item-modern">
+                                            <FiThumbsUp />
+                                            <span>{idea.upvoteCount}</span>
+                                        </div>
+                                        <div className="stat-item-modern">
+                                            <FiEye />
+                                            <span>{idea.viewCount}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="card-actions-modern">
+                                        <Link 
+                                            to={`/dashboard/ideas/${idea._id}`}
+                                            className="btn-modern btn-view"
+                                        >
+                                            <FiEye /> View
+                                        </Link>
+                                        <button
+                                            className="btn-modern btn-respond"
+                                            onClick={() => {
+                                                setSelectedIdea(idea);
+                                                setShowResponseModal(true);
+                                            }}
+                                        >
+                                            <FiMessageSquare /> Respond
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 )}
 
                 {/* Response Modal */}
-                {showResponseModal && (
-                    <div className="modal-overlay" onClick={() => setShowResponseModal(false)}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <h2>Add Government Response</h2>
-                            <p className="modal-subtitle">Responding to: {selectedIdea?.title}</p>
-
-                            <form onSubmit={handleAddResponse}>
-                                <div className="form-group">
-                                    <label>Response Status</label>
-                                    <select
-                                        value={responseData.status}
-                                        onChange={(e) => setResponseData({...responseData, status: e.target.value})}
-                                        required
-                                    >
-                                        <option value="">Select Status</option>
-                                        <option value="Acknowledged">Acknowledged</option>
-                                        <option value="Under Consideration">Under Consideration</option>
-                                        <option value="Approved for Implementation">Approved for Implementation</option>
-                                        <option value="Not Feasible">Not Feasible</option>
-                                    </select>
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Update Idea Status</label>
-                                    <select
-                                        value={responseData.newStatus}
-                                        onChange={(e) => setResponseData({...responseData, newStatus: e.target.value})}
-                                    >
-                                        <option value="">Keep Current Status</option>
-                                        <option value="Under Review">Under Review</option>
-                                        <option value="Shortlisted">Shortlisted</option>
-                                        <option value="Approved">Approved</option>
-                                        <option value="Rejected">Rejected</option>
-                                        <option value="On Hold">On Hold</option>
-                                    </select>
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Response Message *</label>
-                                    <textarea
-                                        value={responseData.message}
-                                        onChange={(e) => setResponseData({...responseData, message: e.target.value})}
-                                        placeholder="Provide detailed feedback to the citizen..."
-                                        required
-                                        rows={5}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Estimated Implementation Date</label>
-                                    <input
-                                        type="date"
-                                        value={responseData.estimatedImplementationDate}
-                                        onChange={(e) => setResponseData({...responseData, estimatedImplementationDate: e.target.value})}
-                                    />
-                                </div>
-
-                                <div className="modal-actions">
+                <AnimatePresence>
+                    {showResponseModal && (
+                        <motion.div 
+                            className="modal-overlay-modern"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowResponseModal(false)}
+                        >
+                            <motion.div 
+                                className="modal-content-modern"
+                                initial={{ scale: 0.9, y: 20 }}
+                                animate={{ scale: 1, y: 0 }}
+                                exit={{ scale: 0.9, y: 20 }}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="modal-header-modern">
+                                    <div className="modal-icon">
+                                        <FiMessageSquare />
+                                    </div>
+                                    <div>
+                                        <h2>Add Government Response</h2>
+                                        <p>Responding to: <strong>{selectedIdea?.title}</strong></p>
+                                    </div>
                                     <button 
-                                        type="button" 
-                                        className="btn btn-secondary"
+                                        className="modal-close"
                                         onClick={() => setShowResponseModal(false)}
                                     >
-                                        Cancel
-                                    </button>
-                                    <button type="submit" className="btn btn-primary">
-                                        Submit Response
+                                        <FiX />
                                     </button>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
+
+                                <form onSubmit={handleAddResponse} className="modal-form-modern">
+                                    <div className="form-group-modal">
+                                        <label className="form-label-modal">
+                                            Response Status *
+                                        </label>
+                                        <select
+                                            value={responseData.status}
+                                            onChange={(e) => setResponseData({...responseData, status: e.target.value})}
+                                            className="form-input-modal"
+                                            required
+                                        >
+                                            <option value="">Select Status</option>
+                                            <option value="Acknowledged">Acknowledged</option>
+                                            <option value="Under Consideration">Under Consideration</option>
+                                            <option value="Approved for Implementation">Approved for Implementation</option>
+                                            <option value="Not Feasible">Not Feasible</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group-modal">
+                                        <label className="form-label-modal">
+                                            Update Idea Status
+                                        </label>
+                                        <select
+                                            value={responseData.newStatus}
+                                            onChange={(e) => setResponseData({...responseData, newStatus: e.target.value})}
+                                            className="form-input-modal"
+                                        >
+                                            <option value="">Keep Current Status</option>
+                                            <option value="Under Review">Under Review</option>
+                                            <option value="Shortlisted">Shortlisted</option>
+                                            <option value="Approved">Approved</option>
+                                            <option value="Rejected">Rejected</option>
+                                            <option value="On Hold">On Hold</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group-modal">
+                                        <label className="form-label-modal">
+                                            Response Message *
+                                        </label>
+                                        <textarea
+                                            value={responseData.message}
+                                            onChange={(e) => setResponseData({...responseData, message: e.target.value})}
+                                            placeholder="Provide detailed feedback to the citizen..."
+                                            className="form-textarea-modal"
+                                            required
+                                            rows={5}
+                                        />
+                                    </div>
+
+                                    <div className="form-group-modal">
+                                        <label className="form-label-modal">
+                                            <FiCalendar /> Estimated Implementation Date
+                                        </label>
+                                        <input
+                                            type="date"
+                                            value={responseData.estimatedImplementationDate}
+                                            onChange={(e) => setResponseData({...responseData, estimatedImplementationDate: e.target.value})}
+                                            className="form-input-modal"
+                                        />
+                                    </div>
+
+                                    <div className="modal-actions-modern">
+                                        <button 
+                                            type="button" 
+                                            className="btn-modal btn-cancel"
+                                            onClick={() => setShowResponseModal(false)}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button type="submit" className="btn-modal btn-submit">
+                                            <FiSend /> Submit Response
+                                        </button>
+                                    </div>
+                                </form>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </Layout>
     );

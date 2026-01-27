@@ -14,6 +14,7 @@ import Navbar from '../../components/layout/Navbar';
 import Sidebar from '../../components/layout/Sidebar';
 import toast from 'react-hot-toast';
 import '../Pages.css';
+import './CitizenPages.css';
 
 const Policies = () => {
     const [policies, setPolicies] = useState([]);
@@ -73,17 +74,17 @@ const Policies = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <div className="dashboard-header">
+                        <div className="page-header-modern">
                             <div>
-                                <h1 className="dashboard-title">Government Policies</h1>
-                                <p className="dashboard-subtitle">
+                                <h1>Government Policies</h1>
+                                <p>
                                     Learn about current policies and show your support
                                 </p>
                             </div>
                         </div>
 
                         {/* Filters */}
-                        <div className="section-card" style={{ marginBottom: 'var(--spacing-6)' }}>
+                        <div className="filter-bar-modern">
                             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--spacing-4)' }}>
                                 <div className="form-group" style={{ marginBottom: 0 }}>
                                     <label className="form-label">
@@ -129,7 +130,7 @@ const Policies = () => {
                                 <div className="spinner" style={{ margin: '0 auto' }}></div>
                             </div>
                         ) : policies.length === 0 ? (
-                            <div className="section-card" style={{ textAlign: 'center', padding: '3rem' }}>
+                            <div className="empty-state">
                                 <p style={{ color: 'var(--text-muted)' }}>No policies found</p>
                             </div>
                         ) : (

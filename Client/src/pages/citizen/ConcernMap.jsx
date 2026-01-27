@@ -8,6 +8,7 @@ import Sidebar from '../../components/layout/Sidebar';
 import { FiMapPin, FiRefreshCw, FiLoader } from 'react-icons/fi';
 import L from 'leaflet';
 import toast from 'react-hot-toast';
+import './CitizenPages.css';
 
 // Fix for default marker icon in React Leaflet using CDN
 // This avoids issues with Vite asset importing
