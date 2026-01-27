@@ -97,13 +97,16 @@ const getAllPolicies = async (req, res) => {
     try {
         const {
             page = 1,
-            limit = 10,
+            limit = 100, // Increased default limit
             category,
             status,
             search,
             sortBy = 'createdAt',
             order = 'desc'
         } = req.query;
+
+        console.log('getAllPolicies called by:', req.user ? `${req.user.name} (${req.user.role})` : 'Guest');
+        console.log('Query params:', { category, status, search, limit });
 
         // Build query
         const query = { isActive: true };
@@ -117,15 +120,24 @@ const getAllPolicies = async (req, res) => {
         }
 
         // For non-admin users, only show published policies
-        // Admin users see all by default unless status is specified
+        // If status is explicitly set, respect it (even for non-admins trying to filter)
+        // But if no status filter or "All", non-admins only see Published
         if (!req.user || req.user.role !== 'admin') {
+            // If user is not admin and no specific status filter, force Published
             if (!status || status === 'All') {
                 query.status = 'Published';
             }
         }
+        // If user IS admin and status is 'All' or not set, don't add status filter
+        // This allows admin to see all policies
+
+        console.log('Final query:', query);
 
         if (search) {
-            query.$text = { $search: search };
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
         }
 
         // Sort options
@@ -139,6 +151,8 @@ const getAllPolicies = async (req, res) => {
             .limit(Number(limit));
 
         const total = await Policy.countDocuments(query);
+
+        console.log(`Found ${policies.length} policies out of ${total} total`);
 
         res.status(200).json({
             success: true,

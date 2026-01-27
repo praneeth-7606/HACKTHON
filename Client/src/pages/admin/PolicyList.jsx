@@ -32,7 +32,7 @@ const PolicyList = () => {
     const fetchPolicies = async () => {
         try {
             setLoading(true);
-            const params = {};
+            const params = { limit: 100 }; // Increase limit to show more policies
             if (filters.category !== 'All') params.category = filters.category;
             if (filters.status !== 'All') params.status = filters.status;
             if (filters.search) params.search = filters.search;
@@ -42,6 +42,7 @@ const PolicyList = () => {
                 setPolicies(data.data.policies);
             }
         } catch (error) {
+            console.error('Fetch policies error:', error);
             toast.error('Failed to fetch policies');
         } finally {
             setLoading(false);

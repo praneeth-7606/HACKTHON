@@ -14,7 +14,9 @@ import {
     FiMap,
     FiChevronLeft,
     FiChevronRight,
-    FiAward
+    FiAward,
+    FiZap,
+    FiDollarSign
 } from 'react-icons/fi';
 import './Layout.css';
 
@@ -52,6 +54,13 @@ const Sidebar = () => {
             items: [
                 { to: '/admin/policies', icon: FiFileText, label: 'Policies' },
                 { to: '/admin/concerns', icon: FiAlertCircle, label: 'Concerns' },
+                { to: '/admin/ideas', icon: FiZap, label: 'Ideas' },
+            ]
+        },
+        {
+            section: 'AI AGENTS',
+            items: [
+                { to: '/admin/budget-planner', icon: FiDollarSign, label: 'Budget Planner', badge: 'AI' },
             ]
         },
         {
@@ -73,14 +82,16 @@ const Sidebar = () => {
         {
             section: 'MY ACTIVITY',
             items: [
-                { to: '/dashboard/concerns', icon: FiMessageSquare, label: 'My Concerns' },
-                { to: '/dashboard/concerns/report', icon: FiAlertCircle, label: 'Report Issue', badge: 'New' },
+                { to: '/dashboard/concerns/report', icon: FiAlertCircle, label: 'Report Issue', badge: 'New', end: true },
+                { to: '/dashboard/concerns', icon: FiMessageSquare, label: 'My Concerns', end: true },
+                { to: '/dashboard/ideas/my', icon: FiZap, label: 'My Ideas', end: true },
             ]
         },
         {
             section: 'RESOURCES',
             items: [
                 { to: '/dashboard/policies', icon: FiFileText, label: 'Policies' },
+                { to: '/dashboard/ideas', icon: FiZap, label: 'Innovation Hub' },
                 { to: '/dashboard/leaderboard', icon: FiAward, label: 'Leaderboard' },
                 { to: '/dashboard/notifications', icon: FiBell, label: 'Notifications' },
             ]

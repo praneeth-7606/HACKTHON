@@ -13,7 +13,18 @@ const notificationSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['StatusUpdate', 'NewComment', 'AdminAlert', 'System'],
+        enum: [
+            'StatusUpdate', 
+            'NewComment', 
+            'AdminAlert', 
+            'System',
+            'IdeaResponse',
+            'IdeaUpdate',
+            'IdeaSubmitted',
+            'PolicyUpdate',
+            'ConcernUpdate',
+            'Achievement'
+        ],
         required: true
     },
     concern: {
@@ -23,6 +34,10 @@ const notificationSchema = new mongoose.Schema({
     policy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Policy'
+    },
+    idea: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Idea'
     },
     message: {
         type: String,

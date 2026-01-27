@@ -22,6 +22,12 @@ import Profile from './pages/citizen/Profile';
 import ConcernMap from './pages/citizen/ConcernMap';
 import Leaderboard from './pages/citizen/Leaderboard';
 import Notifications from './pages/citizen/Notifications';
+import Ideas from './pages/citizen/Ideas';
+import SubmitIdea from './pages/citizen/SubmitIdea';
+import IdeaDetail from './pages/citizen/IdeaDetail';
+import MyIdeas from './pages/citizen/MyIdeas';
+import ManageIdeas from './pages/admin/ManageIdeas';
+import BudgetPlanner from './pages/admin/BudgetPlanner';
 
 function App() {
     const { isAuthenticated, user, loading } = useAuth();
@@ -119,6 +125,22 @@ function App() {
                     </ProtectedRoute>
                 }
             />
+            <Route
+                path="/admin/ideas"
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <ManageIdeas />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/admin/budget-planner"
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <BudgetPlanner />
+                    </ProtectedRoute>
+                }
+            />
 
             {/* Citizen Routes */}
             <Route
@@ -134,6 +156,14 @@ function App() {
                 element={
                     <ProtectedRoute allowedRoles={['citizen']}>
                         <Profile />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/dashboard/concerns/report"
+                element={
+                    <ProtectedRoute allowedRoles={['citizen']}>
+                        <ReportConcern />
                     </ProtectedRoute>
                 }
             />
@@ -170,18 +200,42 @@ function App() {
                 }
             />
             <Route
-                path="/dashboard/concerns/report"
-                element={
-                    <ProtectedRoute allowedRoles={['citizen']}>
-                        <ReportConcern />
-                    </ProtectedRoute>
-                }
-            />
-            <Route
                 path="/dashboard/policies"
                 element={
                     <ProtectedRoute allowedRoles={['citizen']}>
                         <Policies />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/dashboard/ideas"
+                element={
+                    <ProtectedRoute allowedRoles={['citizen']}>
+                        <Ideas />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/dashboard/ideas/submit"
+                element={
+                    <ProtectedRoute allowedRoles={['citizen']}>
+                        <SubmitIdea />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/dashboard/ideas/my"
+                element={
+                    <ProtectedRoute allowedRoles={['citizen']}>
+                        <MyIdeas />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/dashboard/ideas/:id"
+                element={
+                    <ProtectedRoute allowedRoles={['citizen', 'admin']}>
+                        <IdeaDetail />
                     </ProtectedRoute>
                 }
             />

@@ -168,12 +168,12 @@ const PolicyDetail = () => {
             <Navbar />
             <div className="dashboard-layout">
                 <Sidebar />
-                <main className="dashboard-main">
+                <main className="dashboard-main" style={{ background: 'var(--bg-secondary)', minHeight: '100vh' }}>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="container"
+                        style={{ maxWidth: '1400px', margin: '0 auto' }}
                     >
                         {/* Back Button */}
                         <button

@@ -13,6 +13,8 @@ const aiRoutes = require('./routes/aiRoutes');
 const concernRoutes = require('./routes/concernRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const ideaRoutes = require('./routes/ideaRoutes');
+const agentRoutes = require('./routes/agentRoutes');
 
 // Initialize express app
 const app = express();
@@ -67,6 +69,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/policies', policyRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/ideas', ideaRoutes);
+app.use('/api/agents', agentRoutes);
 app.get('/api/test', (req, res) => res.json({ success: true, message: 'API is reachable' }));
 
 // Serve uploads directory specifically for concerns and policies
