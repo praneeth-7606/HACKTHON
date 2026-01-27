@@ -9,15 +9,9 @@ CivicConnect is a comprehensive full-stack web application designed to revolutio
 
 ## 🎥 Demo Video
 
-https://github.com/user-attachments/assets/hackthon_video.mp4
+[![Watch Demo Video](https://img.shields.io/badge/Watch-Demo%20Video-red?style=for-the-badge&logo=google-drive)](https://drive.google.com/file/d/1JbJlX18sVAe_7Vw-ypwcGVW9QUdEeo5x/view?usp=sharing)
 
-> **Note**: Click the video above to watch the full demo. If the video doesn't play inline, you can [download and view the demo video](./hackthon_video.mp4) directly.
-
-https://github.com/user-attachments/assets/hackthon_video.mp4
-
-<video src="hackthon_video.mp4" controls="controls" style="max-width: 100%;">
-  Your browser does not support the video tag.
-</video>
+👉 **[Click here to watch the full demo video](https://drive.google.com/file/d/1JbJlX18sVAe_7Vw-ypwcGVW9QUdEeo5x/view?usp=sharing)**
 
 ---
 
